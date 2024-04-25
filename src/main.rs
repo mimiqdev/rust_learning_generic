@@ -1,4 +1,7 @@
-fn largest(list: &[i32]) -> &i32 {
+#![allow(unused)]
+
+// restrict the types valid for T to only those that implement PartialOrd
+fn largest<T: std::cmp::PartialOrd>(list: &[T]) -> &T {
     let mut largest = &list[0];
 
     for item in list {
@@ -8,6 +11,40 @@ fn largest(list: &[i32]) -> &i32 {
     }
 
     largest
+}
+
+// Generic in struct
+struct Point<T> {
+    x: T,
+    y: T,
+}
+
+// Generic in method definition
+// We need to declare T just after impl
+impl<T> Point<T> {
+    fn x(&self) -> &T {
+        &self.x
+    }
+}
+
+// This will make Point<f32> have distance_from_origin()
+// but other Point<T> will not
+impl Point<f32> {
+    fn distance_from_origin(&self) -> f32 {
+        (self.x.powi(2) + self.y.powi(2)).sqrt()
+    }
+}
+
+// Generic in Enum
+enum Option<T> {
+    Some(T),
+    None,
+}
+
+// Multiple Generics in Enum
+enum Result<T, E> {
+    Ok(T),
+    Err(E),
 }
 
 fn main() {
@@ -20,4 +57,7 @@ fn main() {
 
     let result = largest(&number_list);
     println!("The largest number is {}", result);
+
+    let integer = Point { x: 5, y: 10 };
+    let float = Point { x: 1.0, y: 1.0 };
 }
