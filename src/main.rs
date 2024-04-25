@@ -1,63 +1,29 @@
-#![allow(unused)]
-
-// restrict the types valid for T to only those that implement PartialOrd
-fn largest<T: std::cmp::PartialOrd>(list: &[T]) -> &T {
-    let mut largest = &list[0];
-
-    for item in list {
-        if item > largest {
-            largest = item;
-        }
-    }
-
-    largest
-}
-
-// Generic in struct
-struct Point<T> {
-    x: T,
-    y: T,
-}
-
-// Generic in method definition
-// We need to declare T just after impl
-impl<T> Point<T> {
-    fn x(&self) -> &T {
-        &self.x
-    }
-}
-
-// This will make Point<f32> have distance_from_origin()
-// but other Point<T> will not
-impl Point<f32> {
-    fn distance_from_origin(&self) -> f32 {
-        (self.x.powi(2) + self.y.powi(2)).sqrt()
-    }
-}
-
-// Generic in Enum
-enum Option<T> {
-    Some(T),
-    None,
-}
-
-// Multiple Generics in Enum
-enum Result<T, E> {
-    Ok(T),
-    Err(E),
-}
+pub mod generic;
+pub mod traits;
+use traits::Summary;
 
 fn main() {
-    let number_list = vec![34, 50, 25, 100, 65];
+    generic::generic();
+    let tweet = traits::Tweet {
+        username: String::from("horse_ebooks"),
+        content: String::from("of course, as you probably already know, people"),
+        reply: false,
+        retweet: false,
+    };
 
-    let result = largest(&number_list);
-    println!("The largest number is {}", result);
+    println!("1 new tweet: {}", tweet.summarize());
 
-    let number_list = vec![102, 34, 6000, 89, 54, 2, 43, 8];
+    let article = traits::NewsArticle {
+        headline: String::from("Penguins win the Stanley Cup Championship!"),
+        location: String::from("Pittsburgh, PA, USA"),
+        author: String::from("Iceburgh"),
+        content: String::from(
+            "The Pittsburgh Penguins once again are the best \
+             hockey team in the NHL.",
+        ),
+    };
 
-    let result = largest(&number_list);
-    println!("The largest number is {}", result);
+    println!("New article available! {}", article.summarize());
 
-    let integer = Point { x: 5, y: 10 };
-    let float = Point { x: 1.0, y: 1.0 };
+    // traits::notify("String"); // invalid as &str don't implement Summary
 }
