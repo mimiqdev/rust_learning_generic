@@ -1,6 +1,7 @@
 pub mod generic;
 pub mod traits;
 use traits::Summary;
+pub mod lifetime;
 
 fn main() {
     generic::generic();
@@ -26,4 +27,6 @@ fn main() {
     println!("New article available! {}", article.summarize());
 
     // traits::notify("String"); // invalid as &str don't implement Summary
+
+    lifetime::lifetime();
 }
